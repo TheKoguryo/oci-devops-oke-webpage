@@ -1,0 +1,91 @@
+version: 0.1
+component: build
+timeoutInSeconds: 6000
+runAs: root
+shell: bash
+env:
+  # these are local variables to the build config
+  variables:
+    defaultAppName: "fastapi-webpage"
+
+  # the value of a vaultVariable is the secret-id (in OCI ID format) stored in the OCI Vault service
+  # you can then access the value of that secret in your build_spec.yaml commands
+  vaultVariables:
+    
+  # exportedVariables are made available to use as parameters in sucessor Build Pipeline stages
+  # For this Build to run, the Build Pipeline needs to have a BUILDRUN_HASH parameter set
+  exportedVariables:
+    - BUILDRUN_HASH
+    - APP_NAME
+    - IMAGE_PATH
+    - TAG
+
+#Its a native way to fetch artifacts from external or artifact repo or a file path to use before a stage.
+# More about buildspec formats - https://docs.oracle.com/en-us/iaas/Content/devops/using/build_specs.htm
+
+inputArtifacts: 
+  - name: golan-cli
+    type: URL 
+    url: https://go.dev/dl/go1.17.8.linux-amd64.tar.gz
+    location: ${OCI_PRIMARY_SOURCE_DIR}/gocli.tar.gz
+
+steps:
+  - type: Command
+    name: "Init exportedVariables"
+    timeoutInSeconds: 4000
+    command: |
+      APP_NAME=$defaultAppName
+      echo $APP_NAME
+   
+  - type: Command
+    name: "Build Source"
+    timeoutInSeconds: 4000
+    command: |
+      echo no action
+
+  - type: Command
+    name: "Define Image Tag - Commit ID"
+    timeoutInSeconds: 30
+    command: |
+      COMMIT_ID=`echo ${OCI_TRIGGER_COMMIT_HASH} | cut -c 1-7`
+      BUILDRUN_HASH=`echo ${OCI_BUILD_RUN_ID} | rev | cut -c 1-7`
+      [ -z "$COMMIT_ID" ] && TAG=$BUILDRUN_HASH || TAG=$COMMIT_ID
+
+  - type: Command
+    name: "Define Image Path"
+    timeoutInSeconds: 30
+    command: |
+      TENANCY_NAMESPACE=`oci os ns get --query data --raw-output`
+      REPO_NAME=$APP_NAME
+      IMAGE_PATH=$OCI_RESOURCE_PRINCIPAL_REGION.ocir.io/$TENANCY_NAMESPACE/$REPO_NAME
+
+  - type: Command
+    timeoutInSeconds: 1200
+    name: "Build Container Image"
+    command: |
+      cd ${OCI_PRIMARY_SOURCE_DIR}
+      docker build --pull --rm -t oke_app_base .      
+
+  - type: Command
+    name: "Check exportedVariables"
+    timeoutInSeconds: 30
+    command: |  
+      [ -z "$APP_NAME" ] && APP_NAME=unknown          
+      [ -z "$IMAGE_PATH" ] && IMAGE_PATH=unknown    
+      [ -z "$TAG" ] && TAG=unknown
+      echo "APP_NAME: " $APP_NAME      
+      echo "IMAGE_PATH: " $IMAGE_PATH
+      echo "TAG: " $TAG
+     
+outputArtifacts:
+  - name: oke_app_base
+    type: DOCKER_IMAGE
+    # this location tag doesn't effect the tag used to deliver the container image
+    # to the Container Registry
+    location: oke_app_base:latest
+
+  - name: oke_deploy_manifest
+    type: BINARY
+    # this location tag doesn't effect the tag used to deliver the container image
+    # to the Container Registry
+    location: ${OCI_PRIMARY_SOURCE_DIR}/oci-oke-deployment.yaml
