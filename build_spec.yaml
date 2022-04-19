@@ -7,6 +7,7 @@ env:
   # these are local variables to the build config
   variables:
     defaultAppName: "webpage"
+    defaultContextPath: "/webpage"
 
   # the value of a vaultVariable is the secret-id (in OCI ID format) stored in the OCI Vault service
   # you can then access the value of that secret in your build_spec.yaml commands
@@ -19,6 +20,7 @@ env:
     - APP_NAME
     - IMAGE_PATH
     - TAG
+    - CONTEXT_PATH
 
 #Its a native way to fetch artifacts from external or artifact repo or a file path to use before a stage.
 # More about buildspec formats - https://docs.oracle.com/en-us/iaas/Content/devops/using/build_specs.htm
@@ -35,6 +37,7 @@ steps:
     timeoutInSeconds: 4000
     command: |
       APP_NAME=$defaultAppName
+      CONTEXT_PATH=$defaultContextPath
       echo $APP_NAME
    
   - type: Command
@@ -64,7 +67,7 @@ steps:
     name: "Build Container Image"
     command: |
       cd ${OCI_PRIMARY_SOURCE_DIR}
-      docker build --pull --rm -t oke_app_base .      
+      docker build --pull --rm -t oke_app_base . --build-arg CONTEXT_PATH=$CONTEXT_PATH
 
   - type: Command
     name: "Check exportedVariables"
