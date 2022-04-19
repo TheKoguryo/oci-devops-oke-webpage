@@ -161,13 +161,8 @@
 				return location.href.substring( hostIndex, location.href.indexOf('/', hostIndex + 1) );
 			};
 
-			document.head.innerHTML = document.head.innerHTML + "<base href='" + document.location.href + "' />";
-                        location.reload();
-
                         $(document).ready(function(){
-                                var base = document.createElement('base1');
-                                base.href = window.location.protocol + '//' + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
-                                document.getElementsByTagName('head')[0].appendChild(base);
+			        document.head.innerHTML = document.head.innerHTML + "<base href='" + document.location.href + "' />";
 		        });
 	        </script>
 		
