@@ -5,6 +5,6 @@ COPY html/ /usr/share/nginx/html/
 
 ENV POD_NAMESPACE="default"
 
-ENV VERSION="1.0"
+ENV VERSION="1.1"
 ENV MESSAGE="Hello OCI DevOps"
-ENV BACKGROUND="blue"
+ENV BACKGROUND="green"
