@@ -155,6 +155,20 @@
 		<script src='js/jquery.magnific-popup.min.js' ></script>
 		<script src='js/validator.min.js' ></script>
 		<script src='js/script.js' ></script>
+	        <script>
+			function getContextPath() {
+				var hostIndex = location.href.indexOf( location.host ) + location.host.length;
+				return location.href.substring( hostIndex, location.href.indexOf('/', hostIndex + 1) );
+			};
+
+			document.head.innerHTML = document.head.innerHTML + "<base href='" + document.location.href + "' />";
+
+                        $(document).ready(function(){
+                                var base = document.createElement('base1');
+                                base.href = window.location.protocol + '//' + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
+                                document.getElementsByTagName('head')[0].appendChild(base);
+		        });
+	        </script>
 		
 	</body>
 </html>
