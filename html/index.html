@@ -7,7 +7,7 @@
 		<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 		
 		
-		<title>OCI-K8s</title>
+		<title>Demo Web Page</title>
 		
 		
 		<!--=====================================================
@@ -19,6 +19,12 @@
 		<link rel='stylesheet' type='text/css' href='css/owl.carousel.css' >
 		<link rel='stylesheet' type='text/css' href='css/magnific-popup.css' >
 		<link rel='stylesheet' type='text/css' href='css/style.css' >
+
+                <style>
+                        .section-main:before {
+                                background: <!--#echo var="background"-->
+                        }
+                </style>
 		
 	</head>
 	<body>
@@ -108,10 +114,10 @@
 								<div class='intro-text' >
 									
 									<h1>Demo Web Page</h1>
-									
-									<p>
-										Oracle Container Engine for Kubernetes - Oracle Cloud Infrastructure
-									</p>
+
+									<p> Version:   <!--#echo var="version"--> </p>
+									<p> Namespace: <!--#echo var="namespace"--> </p>
+									<p> Message:   <!--#echo var="message"--> </p>
 									
 									<div class='intro-btns' >
 										
