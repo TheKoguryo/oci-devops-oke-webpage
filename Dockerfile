@@ -8,3 +8,5 @@ ENV POD_NAMESPACE="default"
 ENV VERSION="1.2"
 ENV MESSAGE="Hello OCI DevOps"
 ENV BACKGROUND="red"
+
+ENV CONTEXT_PATH="/webpage"

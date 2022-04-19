@@ -9,6 +9,12 @@ server {
         root   /usr/share/nginx/html;
         index  index.html index.htm;
 
+        sub_filter_once off;
+        sub_filter 'src="/' 'src="${CONTEXT_PATH}/';
+        sub_filter 'src=\'/' 'src=\'${CONTEXT_PATH}/';
+        sub_filter 'href="/' 'href="${CONTEXT_PATH}/';
+        sub_filter 'href=\'/' 'href=\'${CONTEXT_PATH}/';
+
         ssi on;
         set $version    "${VERSION}";
         set $namespace  "${POD_NAMESPACE}";
