@@ -32,6 +32,7 @@ steps:
     name: "Init exportedVariables"
     timeoutInSeconds: 30
     command: |
+      env
       APP_NAME=$defaultAppName
       CONTEXT_PATH=$defaultContextPath
       echo $APP_NAME
@@ -86,6 +87,4 @@ outputArtifacts:
 
   - name: output-oci-oke-deployment
     type: BINARY
-    # this location tag doesn't effect the tag used to deliver the container image
-    # to the Container Registry
     location: ${OCI_PRIMARY_SOURCE_DIR}/oci-oke-deployment.yaml
