@@ -22,23 +22,20 @@ env:
     - TAG
     - CONTEXT_PATH
 
-#Its a native way to fetch artifacts from external or artifact repo or a file path to use before a stage.
+# Its a native way to fetch artifacts from external or artifact repo or a file path to use before a stage.
 # More about buildspec formats - https://docs.oracle.com/en-us/iaas/Content/devops/using/build_specs.htm
 
 inputArtifacts: 
-  - name: golan-cli
-    type: URL 
-    url: https://go.dev/dl/go1.17.8.linux-amd64.tar.gz
-    location: ${OCI_PRIMARY_SOURCE_DIR}/gocli.tar.gz
 
 steps:
   - type: Command
     name: "Init exportedVariables"
-    timeoutInSeconds: 4000
+    timeoutInSeconds: 30
     command: |
       APP_NAME=$defaultAppName
       CONTEXT_PATH=$defaultContextPath
       echo $APP_NAME
+      echo $CONTEXT_PATH
    
   - type: Command
     name: "Build Source"
@@ -67,7 +64,7 @@ steps:
     name: "Build Container Image"
     command: |
       cd ${OCI_PRIMARY_SOURCE_DIR}
-      docker build --pull --rm -t oke_app_base . --build-arg CONTEXT_PATH=$CONTEXT_PATH
+      docker build --pull --rm -t new-generated-image . --build-arg CONTEXT_PATH=$CONTEXT_PATH
 
   - type: Command
     name: "Check exportedVariables"
@@ -81,13 +78,13 @@ steps:
       echo "TAG: " $TAG
      
 outputArtifacts:
-  - name: oke_app_base
+  - name: output-image
     type: DOCKER_IMAGE
     # this location tag doesn't effect the tag used to deliver the container image
     # to the Container Registry
-    location: oke_app_base:latest
+    location: new-generated-image
 
-  - name: oke_deploy_manifest
+  - name: output-oci-oke-deployment.yaml
     type: BINARY
     # this location tag doesn't effect the tag used to deliver the container image
     # to the Container Registry
