@@ -32,9 +32,9 @@ steps:
     name: "Init exportedVariables"
     timeoutInSeconds: 30
     command: |
-      APP_NAME=${param-APP_NAME} # From Console Parameters
+      APP_NAME=${param_APP_NAME} # From Console Parameters
       [ -z "$APP_NAME" ] && APP_NAME=$defaultAppName
-      CONTEXT_PATH=${param-CONTEXT_PATH} # From Console Parameters
+      CONTEXT_PATH=${param_CONTEXT_PATH} # From Console Parameters
       [ -z "$CONTEXT_PATH" ] && CONTEXT_PATH=$defaultContextPath
       echo $APP_NAME
       echo $CONTEXT_PATH
