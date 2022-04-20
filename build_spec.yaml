@@ -33,6 +33,10 @@ steps:
     timeoutInSeconds: 30
     command: |
       env
+      APP_NAME=${parameterName}
+      echo $APP_NAME
+      APP_NAME=${APP_NAME}
+      echo $APP_NAME
       APP_NAME=$defaultAppName
       CONTEXT_PATH=$defaultContextPath
       echo $APP_NAME
